@@ -26,5 +26,54 @@ namespace BusinessLayer.services
                 throw;
             }
         }
+
+        public bool DeleteBook(int BookId)
+        {
+
+            try
+            {
+                return this.bookRL.DeleteBook(BookId);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public BookModel GetBookByBookId(int BookId)
+        {
+            try
+            {
+                return this.bookRL.GetBookByBookId(BookId);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public bool UpdateBook(int BookId, BookModel updateBook)
+        {
+            try
+            {
+                return this.bookRL.UpdateBook(BookId, updateBook);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public List<BookModel> GetAllBooks()
+        {
+            try
+            {
+                return this.bookRL.GetAllBooks();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

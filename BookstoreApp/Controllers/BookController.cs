@@ -16,7 +16,7 @@ namespace BookstoreApp.Controllers
             this.bookBL = bookBL;
         }
 
-        [HttpPost("register")]
+        [HttpPost("AddBook")]
         public IActionResult AddBook(BookModel book)
         {
             try
@@ -24,9 +24,81 @@ namespace BookstoreApp.Controllers
                 BookModel userData = this.bookBL.AddBook(book);
                 if (userData != null)
                 {
-                    return this.Ok(new { Success = true, message = "User Added Sucessfully", Response = userData });
+                    return this.Ok(new { Success = true, message = "Book Added Sucessfully", Response = userData });
                 }
-                return this.Ok(new { Success = true, message = "User Already Exists" });
+                return this.Ok(new { Success = true, message = "Book Already Exists" });
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(new { Success = false, message = ex.Message });
+            }
+        }
+
+        [HttpDelete("Delete/{BookId}")]
+        public IActionResult DeletBook(int BookId)
+        {
+            try
+            {
+                if (this.bookBL.DeleteBook(BookId))
+                {
+                    return this.Ok(new { Success = true, message = "Book Deleted Sucessfully", });
+                }
+                else { return this.BadRequest(new { Success = false, message = "Enter Valid BookId" }); }
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(new { Success = false, message = ex.Message });
+            }
+        }
+
+        [HttpGet("GetBookById")]
+        public IActionResult GetBook(int BookId)
+        {
+            try
+            {
+                BookModel userData = this.bookBL.GetBookByBookId(BookId);
+                if (userData != null)
+                {
+                    return this.Ok(new { Success = true, message = "This is the Book which You wanted", Response = userData });
+                }
+                else { return this.BadRequest(new { Success = false, message = "Enter Valid BookId" }); }
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(new { Success = false, message = ex.Message });
+            }
+        }
+
+        [HttpGet("GetAllBooks")]
+        public IActionResult GetAllBook()
+        {
+            try
+            {
+                var result = this.bookBL.GetAllBooks();
+
+                if (result != null)
+                {
+                    return this.Ok(new { Success = true, message = "Book Detail Fetched Sucessfully", Response =result });
+                }
+                else { return this.BadRequest(new { Success = false, message = "Enter Valid BookId" }); }
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(new { Success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPut("UpdateBook")]
+        public IActionResult UpdateBook(int BookId, BookModel Model)
+        {
+            try
+            {
+                var Data = this.bookBL.UpdateBook(BookId, Model);
+                if (Data == true)
+                {
+                    return this.Ok(new { Success = true, message = " Book Updated successfully", Response = Data });
+                }
+                else { return this.BadRequest(new { Success = false, message = "Enter Valid BookId" }); }
             }
             catch (Exception ex)
             {
