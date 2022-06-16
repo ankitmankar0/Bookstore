@@ -9,11 +9,11 @@ namespace CommonLayer
         public int BookId { get; set; }
         public string BookName { get; set; }
         public string AuthorName { get; set; }
-        public int Rating { get; set; }
+        public int TotalRating { get; set; }
         public int RatingCount { get; set; }
-        public int DiscountPrice { get; set; }
-        public int ActualPrice { get; set; }
-        public string Description { get; set; }
+        public decimal OriginalPrice { get; set; }
+        public decimal DiscountPrice { get; set; }
+        public string BookDetails { get; set; }
         public string BookImage { get; set; }
         public int BookQuantity { get; set; }
     }

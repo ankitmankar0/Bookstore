@@ -69,3 +69,41 @@ SET
 Password = @Password 
 WHERE Email = @Email;
 End;
+
+--------------------------------------------------------------------------------------------Admin Table----------------------------------------------------------------------------------
+create Table Admins
+(
+	AdminId int Identity(1,1) primary key not null,
+	FullName varchar(255) not null,
+	Email varchar(255) not null,
+	Password varchar(255) not null,
+	MobileNumber varchar(50) not null,
+);
+
+select * from Admins
+
+
+INSERT INTO Admins VALUES ('Admin Ankit','admin@bookstore.com', 'Admin@23', '+91 9175739197');
+
+
+Create Proc LoginAdmin
+(
+	@Email varchar(max),
+	@Password varchar(max)
+)
+as
+BEGIN
+	If(Exists(select * from Admins where Email= @Email and Password = @Password))
+		Begin
+			select * from Admins where Email= @Email and Password = @Password;
+		end
+	Else
+		Begin
+			select 2;
+		End
+END;
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
