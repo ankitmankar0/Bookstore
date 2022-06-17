@@ -69,21 +69,22 @@ namespace RepositoryLayer.Services
                 {
                     CommandType = CommandType.StoredProcedure //Command type is a class to set as stored procedure
                 };
+
+                var passwordToEncrypt = EncodePasswordToBase64(Password);
                 com.Parameters.AddWithValue("@Email", Email);
-                com.Parameters.AddWithValue("@Password", Password);
+                com.Parameters.AddWithValue("@Password", passwordToEncrypt);
 
                 this.sqlConnection.Open();
-
-                SqlDataReader reader = com.ExecuteReader(); // Execute sqlDataReader to fetching all records
-                if (reader.HasRows)  // Checking datareader has rows or not.    
+                SqlDataReader rdr = com.ExecuteReader();
+                if (rdr.HasRows)
                 {
                     int UserId = 0;
                     UserLogin user = new UserLogin();
-                    while (reader.Read()) //using while loop for read multiple rows.
+                    while (rdr.Read()) //using while loop for read multi
                     {
-                        user.Email = Convert.ToString(reader["Email"]);
-                        user.Password = Convert.ToString(reader["Password"]);
-                        UserId = Convert.ToInt32(reader["UserId"]);
+                        user.Email = Convert.ToString(rdr["Email"]);
+                        user.Password = Convert.ToString(rdr["Password"]);
+                        UserId = Convert.ToInt32(rdr["UserId"]);
                     }
                     this.sqlConnection.Close();
                     user.Token = this.GetJWTToken(user.Email, UserId);
@@ -134,7 +135,7 @@ namespace RepositoryLayer.Services
 
                     if (MessageQueue.Exists(@".\Private$\BookQueue"))
                     {
-                       queue = new MessageQueue(@".\Private$\BookQueue");
+                        queue = new MessageQueue(@".\Private$\BookQueue");
                     }
                     else
                     {
@@ -146,8 +147,8 @@ namespace RepositoryLayer.Services
                     MyMessage.Body = this.GetJWTToken(email, userId);
                     EmailService.SendMail(email, MyMessage.Body.ToString());
                     queue.ReceiveCompleted += new ReceiveCompletedEventHandler(msmqQueue_ReciveCompleted);
-                    
-                    var token = this.GetJWTToken(email,userId);
+
+                    var token = this.GetJWTToken(email, userId);
 
                     return token;
                 }
@@ -178,11 +179,12 @@ namespace RepositoryLayer.Services
                         CommandType = CommandType.StoredProcedure //Command type is a class to set as stored procedure
                     };
 
-                    var encryptPassword = EncodePasswordToBase64(newPassword);
-                    
+                    // var encryptPassword = EncodePasswordToBase64(newPassword);
+
 
                     com.Parameters.AddWithValue("@Email", email);
-                    com.Parameters.AddWithValue("@Password", EncodePasswordToBase64(newPassword));
+                    //com.Parameters.AddWithValue("@Password", EncodePasswordToBase64(newPassword));
+                    com.Parameters.AddWithValue("@Password", newPassword);
 
                     this.sqlConnection.Open();
                     var result = com.ExecuteNonQuery();
@@ -225,6 +227,7 @@ namespace RepositoryLayer.Services
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
+                    new Claim(ClaimTypes.Role, "User"),
                     new Claim("email", email),
                     new Claim("userID",userID.ToString())
                 }),
@@ -308,7 +311,7 @@ namespace RepositoryLayer.Services
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim("Email", email)
+                    new Claim("Email", email),
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials =

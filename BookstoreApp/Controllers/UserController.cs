@@ -37,7 +37,7 @@ namespace BookstoreApp.Controllers
         }
 
 
-        [HttpPost("login/{email}/{password}")]
+        [HttpPost("login/{Email}/{Password}")]
         public IActionResult LoginUser(string Email, string Password)
         {
             try

@@ -142,3 +142,47 @@ Begin
 update CartTable set BooksQty = @BooksQty
 where CartId = @CartId
 End
+
+--create procedure to GetAllBookinCart by UserId
+create procedure spGetAllBookinCart
+@UserId int
+As
+Begin
+select CartTable.CartId,CartTable.UserId,CartTable.BookId,CartTable.BooksQty,
+BookTable.BookName,BookTable.AuthorName,BookTable.TotalRating,BookTable.RatingCount,BookTable.OriginalPrice,BookTable.DiscountPrice,BookTable.BookDetails,BookTable.BookImage,BookTable.BookQuantity 
+from CartTable inner join BookTable on CartTable.BookId = BookTable.BookId
+where CartTable.UserId = @UserId
+End
+
+
+---------------------------------------------------------------------------------End Book Cart --------------------------------------------------------------------------
+
+---create wishlist table
+create Table WishlistTable
+(
+WishlistId int identity(1,1) primary key,
+UserId INT FOREIGN KEY REFERENCES Users(UserId),
+BookId INT FOREIGN KEY REFERENCES BookTable(BookId)
+);
+
+select * from WishlistTable
+
+
+---create procedure to Add in Wishlist
+create procedure spAddInWishlist
+@UserId int,
+@BookId int
+As
+Begin
+Insert Into WishlistTable (UserId,BookId) values (@UserId,@BookId)
+End
+DROP PROCEDURE spAddInWishlist;
+GO
+
+--create procedure to delete from wishlist
+create procedure spDeleteFromWishlist
+@WishListId int
+As
+Begin
+Delete WishlistTable where WishListId=@WishListId
+End
