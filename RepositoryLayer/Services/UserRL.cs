@@ -184,12 +184,12 @@ namespace RepositoryLayer.Services
 
                     com.Parameters.AddWithValue("@Email", email);
                     //com.Parameters.AddWithValue("@Password", EncodePasswordToBase64(newPassword));
-                    com.Parameters.AddWithValue("@Password", newPassword);
+                    com.Parameters.AddWithValue("@Password", confirmPassword);
 
                     this.sqlConnection.Open();
-                    var result = com.ExecuteNonQuery();
+                    int i = com.ExecuteNonQuery();
                     this.sqlConnection.Close();
-                    if (result != 0)
+                    if (i >=1)
                     {
                         return true;
                     }

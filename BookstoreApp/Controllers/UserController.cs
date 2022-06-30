@@ -3,6 +3,7 @@ using CommonLayer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Security.Claims;
 
 namespace BookstoreApp.Controllers
@@ -77,13 +78,14 @@ namespace BookstoreApp.Controllers
         }
 
         [Authorize]
-        [HttpPut("ResetPassword")]
+        [HttpPut("ResetPassword/{newPassword}/{confirmPassword}")]
         public IActionResult ResetPassword(string newPassword, string confirmPassword)
         {
             try
             {
 
                 var email = User.FindFirst(ClaimTypes.Email).Value.ToString();
+                //var email = User.Claims.FirstOrDefault(e => e.Type == "Email").Value.ToString();
                 if (this.userBL.ResetPassword(email, newPassword, confirmPassword))
                 {
                     return this.Ok(new { Success = true, message = " Password Changed Successfully " });
