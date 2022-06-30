@@ -35,6 +35,10 @@ namespace BookstoreApp
         {
             services.AddControllers();
 
+            services.AddControllers().AddNewtonsoftJson(options =>
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+
             services.AddTransient<IUserRL, UserRL>();
             services.AddTransient<IUserBL, UserBL>();
 
@@ -46,6 +50,21 @@ namespace BookstoreApp
 
             services.AddTransient<ICartRL, CartRL>();
             services.AddTransient<ICartBL, CartBL>();
+
+            services.AddTransient<IWishListBL, WishListBL>();
+            services.AddTransient<IWishListRL, WishListRL>();
+
+            services.AddTransient<IOrderBL, OrderBL>();
+            services.AddTransient<IOrderRL, OrderRL>();
+
+            services.AddTransient<IAddressBL, AddressBL>();
+            services.AddTransient<IAddressRL, AddressRL>();
+
+            services.AddTransient<IFeedbackBL, FeedbackBL>();
+            services.AddTransient<IFeedbackRL, FeedbackRL>();
+
+            services.AddCors();
+
 
             services.AddSwaggerGen(setup =>
             {
@@ -102,6 +121,7 @@ namespace BookstoreApp
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "BookstoreApp");
             });
 
+            app.UseAuthentication();
 
             if (env.IsDevelopment())
             {
@@ -111,7 +131,15 @@ namespace BookstoreApp
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            app.UseAuthentication();
+
+            app.UseCors(builder => {
+                builder.SetIsOriginAllowed(origin => true);
+                builder.AllowAnyOrigin();
+                builder.AllowAnyMethod();
+                builder.AllowAnyHeader();
+            });
+
+            
 
             app.UseAuthorization();
 

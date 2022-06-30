@@ -186,3 +186,14 @@ As
 Begin
 Delete WishlistTable where WishListId=@WishListId
 End
+
+---create procedure to get all Books from wishlist
+create procedure spGetAllBooksinWishList
+@UserId int
+As
+Begin
+select WishlistTable.WishListId,WishlistTable.UserId,WishlistTable.BookId,
+BookTable.BookName,BookTable.AuthorName,BookTable.TotalRating,BookTable.RatingCount,BookTable.OriginalPrice,BookTable.DiscountPrice,BookTable.BookDetails,BookTable.BookImage,BookTable.BookQuantity 
+from WishlistTable inner join BookTable on WishlistTable.BookId=BookTable.BookId
+where WishlistTable.userId=@UserId
+End

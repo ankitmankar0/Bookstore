@@ -25,7 +25,7 @@ namespace RepositoryLayer.Services
                 this.sqlConnection = new SqlConnection(this.Configuration["ConnectionStrings:BookStore"]);
                 SqlCommand cmd = new SqlCommand("SPAddBook", this.sqlConnection)
                 {
-                    CommandType = CommandType.StoredProcedure
+                    CommandType = CommandType.StoredProcedure ////Command type is a class to set as stored procedure
                 };
                 //adding parameter to store procedure
                 cmd.Parameters.AddWithValue("@BookName", book.BookName);
