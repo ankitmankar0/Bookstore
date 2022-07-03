@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace BookstoreApp.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class FeedbackController : Controller
     {
@@ -18,13 +18,13 @@ namespace BookstoreApp.Controllers
             this.feedbackBL = feedbackBL;
         }
 
-
+        [Authorize(Roles = Role.User)]
         [HttpPost("Add")]
         public IActionResult AddFeedback(FeedBackModel feedbackModeld)
         {
             try
             {
-                int userId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
+                int userId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "Id").Value);
                 var feedback = this.feedbackBL.AddFeedback(feedbackModeld, userId);
                 if (feedback != null)
                 {
@@ -41,7 +41,7 @@ namespace BookstoreApp.Controllers
             }
         }
 
-        [HttpGet("Get")]
+        [HttpGet("Get/{bookId}")]
         public IActionResult GetFeedback(int bookId)
         {
             try

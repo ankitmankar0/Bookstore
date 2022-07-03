@@ -18,7 +18,7 @@ namespace RepositoryLayer.Services
         }
         private IConfiguration Configuration { get; }
 
-        public string AddBookinWishList(AddToWishList wishListModel)
+        public string AddBookinWishList(AddToWishList wishListModel, int userId)
         {
             try
             {
@@ -28,8 +28,8 @@ namespace RepositoryLayer.Services
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.AddWithValue("@UserId", wishListModel.UserId);
                 cmd.Parameters.AddWithValue("@BookId", wishListModel.BookId);
+                cmd.Parameters.AddWithValue("@UserId", userId);
                 sqlConnection.Open();
                 cmd.ExecuteNonQuery();
                 return "book is added in WishList successfully";
@@ -44,7 +44,7 @@ namespace RepositoryLayer.Services
             }
         }
 
-        public bool DeleteBookinWishList(int WishListId)
+        public bool DeleteBookinWishList(int WishListId, int userId)
         {
             try
             {
@@ -55,6 +55,7 @@ namespace RepositoryLayer.Services
                 };
 
                 cmd.Parameters.AddWithValue("@WishListId", WishListId);
+                cmd.Parameters.AddWithValue("@UserId", userId);
                 sqlConnection.Open();
                 cmd.ExecuteScalar();
                 return true;

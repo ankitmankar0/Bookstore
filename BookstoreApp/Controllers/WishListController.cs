@@ -1,7 +1,9 @@
 ﻿using BusinessLayer.Interface;
 using CommonLayer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 
 namespace BookstoreApp.Controllers
 {
@@ -17,15 +19,17 @@ namespace BookstoreApp.Controllers
             this.wishlistBL = wishListBL;
         }
 
+        [Authorize(Roles = Role.User)]
         [HttpPost("addBooksInWishList")]
         public IActionResult AddBookinWishList(AddToWishList wishListModel)
         {
             try
             {
-                var result = this.wishlistBL.AddBookinWishList(wishListModel);
+                int userId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "Id").Value);
+                var result = this.wishlistBL.AddBookinWishList(wishListModel, userId);
                 if (result.Equals("book is added in WishList successfully"))
                 {
-                    return this.Ok(new { success = true, message = $"Book is added in WishList  Successfully " });
+                    return this.Ok(new { success = true, message = $"Book is added in WishList  Successfully" });
                 }
                 else
                 {
@@ -44,7 +48,8 @@ namespace BookstoreApp.Controllers
         {
             try
             {
-                var result = this.wishlistBL.DeleteBookinWishList(WishListId);
+                int userId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "Id").Value);
+                var result = this.wishlistBL.DeleteBookinWishList(WishListId, userId);
                 if (result.Equals(true))
                 {
                     return this.Ok(new { success = true, message = $"Book is deleted from the WishList " });
@@ -60,12 +65,14 @@ namespace BookstoreApp.Controllers
             }
         }
 
-        [HttpGet("GetAllBooksinWishList/{UserId}")]
-        public IActionResult GetAllBooksinWishList(int UserId)
+        [Authorize(Roles = Role.User)]
+        [HttpGet("GetAllBooksinWishList")]
+        public IActionResult GetAllBooksinWishList()
         {
             try
             {
-                var result = this.wishlistBL.GetAllBooksinWishList(UserId);
+                int userId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "Id").Value);
+                var result = this.wishlistBL.GetAllBooksinWishList(userId);
                 if (result != null)
                 {
                     return this.Ok(new { success = true, message = $"All Books Displayed in the WishList Successfully ", response = result });
