@@ -18,7 +18,7 @@ namespace RepositoryLayer.Services
         }
         private IConfiguration Configuration { get; }
 
-        public string AddBookToCart(AddToCart cartBook)
+        public string AddBookToCart(AddToCart cartBook, int userId)
         {
             try
             {
@@ -28,9 +28,10 @@ namespace RepositoryLayer.Services
                     CommandType = CommandType.StoredProcedure
                 };
                 //adding parameter to store procedure
-                cmd.Parameters.AddWithValue("@UserId", cartBook.UserId);
+
                 cmd.Parameters.AddWithValue("@BookId", cartBook.BookId);
                 cmd.Parameters.AddWithValue("@BooksQty", cartBook.BooksQty);
+                cmd.Parameters.AddWithValue("@UserId", userId);
 
                 this.sqlConnection.Open();
                 cmd.ExecuteNonQuery();
@@ -91,7 +92,7 @@ namespace RepositoryLayer.Services
                     {
                         CartModel model = new CartModel();
                         BookModel bookModel = new BookModel();
-                        model.UserId = Convert.ToInt32(reader["UserId"]);
+                        //model.UserId = Convert.ToInt32(reader["UserId"]);
                         model.CartId = Convert.ToInt32(reader["CartId"]);
                         bookModel.BookName = reader["BookName"].ToString();
                         bookModel.AuthorName = reader["AuthorName"].ToString();

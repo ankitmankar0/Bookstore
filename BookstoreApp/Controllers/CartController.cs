@@ -3,6 +3,7 @@ using CommonLayer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 
 namespace BookstoreApp.Controllers
 {
@@ -24,7 +25,8 @@ namespace BookstoreApp.Controllers
         {
             try
             {
-                var userData = this.cartBL.AddBookToCart(cart);
+                int userId = Convert.ToInt32(User.Claims.FirstOrDefault(x => x.Type == "Id").Value);             
+                var userData = this.cartBL.AddBookToCart(cart, userId);
                 if (userData != null)
                 {
                     return this.Ok(new { Success = true, message = "Book Added to cart Sucessfully", Response = userData });
@@ -57,12 +59,13 @@ namespace BookstoreApp.Controllers
         }
 
         [Authorize(Roles = Role.User)]
-        [HttpGet("GetAllBooks")]
-        public IActionResult GetAllBookInCart(int UserId)
+        [HttpGet("GetAllBooksInCart")]
+        public IActionResult GetAllBookInCart()
         {
             try
             {
-                var result = this.cartBL.GetAllBooksinCart(UserId);
+                int userId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+                var result = this.cartBL.GetAllBooksinCart(userId);
 
                 if (result != null)
                 {
@@ -77,7 +80,7 @@ namespace BookstoreApp.Controllers
         }
 
         [Authorize(Roles = Role.User)]
-        [HttpPut("UpdateCart")]
+        [HttpPut("UpdateCart/{CartId}/{BooksQty}")]
         public IActionResult UpdateCart(int CartId, int BooksQty)
         {
             try

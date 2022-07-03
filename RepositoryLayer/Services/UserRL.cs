@@ -218,7 +218,7 @@ namespace RepositoryLayer.Services
 
 
         //Implementing Jwt Token For Login using Email and Id
-        public string GetJWTToken(string email, long userID)
+        public string GetJWTToken(string email, long userId)
         {
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -229,7 +229,7 @@ namespace RepositoryLayer.Services
                 {
                     new Claim(ClaimTypes.Role, "User"),
                     new Claim("email", email),
-                    new Claim("userID",userID.ToString())
+                    new Claim("Id",userId.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
 

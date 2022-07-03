@@ -15,12 +15,12 @@ namespace BusinessLayer.services
         }
         IWishListRL wishlistRL;
 
-        public string AddBookinWishList(AddToWishList wishListModel)
+        public string AddBookinWishList(AddToWishList wishListModel, int userId)
         {
 
             try
             {
-                return wishlistRL.AddBookinWishList(wishListModel);
+                return wishlistRL.AddBookinWishList(wishListModel, userId);
             }
             catch (Exception ex)
             {
@@ -28,11 +28,11 @@ namespace BusinessLayer.services
             }
         }
 
-        public bool DeleteBookinWishList(int WishListId)
+        public bool DeleteBookinWishList(int WishListId, int userId)
         {
             try
             {
-                return wishlistRL.DeleteBookinWishList(WishListId);
+                return wishlistRL.DeleteBookinWishList(WishListId, userId);
 
             }
             catch (Exception ex)

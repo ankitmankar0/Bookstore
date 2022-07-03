@@ -50,12 +50,14 @@ namespace RepositoryLayer.Services
 
         public List<DisplayFeedback> GetAllFeedback(int bookId)
         {
-            sqlConnection = new SqlConnection(this.Configuration.GetConnectionString("BookStore"));
             try
             {
-                using (sqlConnection)
+                this.sqlConnection = new SqlConnection(this.Configuration["ConnectionStrings:BookStore"]);
+                SqlCommand cmd = new SqlCommand("spGetFeedback", this.sqlConnection)
                 {
-                    SqlCommand cmd = new SqlCommand("spGetFeedback", sqlConnection);
+                    CommandType = CommandType.StoredProcedure
+                };
+                
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@BookId", bookId);
                     sqlConnection.Open();
@@ -85,7 +87,7 @@ namespace RepositoryLayer.Services
                     {
                         return null;
                     }
-                }
+                
             }
             catch (Exception)
             {

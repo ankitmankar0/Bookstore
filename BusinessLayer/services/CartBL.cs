@@ -15,11 +15,11 @@ namespace BusinessLayer.services
         }
         ICartRL cartRL;
 
-        public string AddBookToCart(AddToCart cartBook)
+        public string AddBookToCart(AddToCart cartBook, int userId)
         {
             try
             {
-                return this.cartRL.AddBookToCart(cartBook);
+                return this.cartRL.AddBookToCart(cartBook, userId);
             }
             catch (Exception)
             {
